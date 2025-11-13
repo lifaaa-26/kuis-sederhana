@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kuis Sederhana</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f1f5f9;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .container {
+      background: white;
+      padding: 20px 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 6px;
+      background: #2563eb;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #1d4ed8;
+    }
+    .option {
+      display: block;
+      background: #e2e8f0;
+      margin: 8px 0;
+      padding: 8px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .option:hover {
+      background: #cbd5e1;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="startScreen">
+    <h2>Selamat Datang di Game Kuis 🎯</h2>
+    <p>Masukkan nama kamu untuk memulai:</p>
+    <input type="text" id="playerName" placeholder="Nama kamu">
+    <button onclick="startQuiz()">Mulai Kuis</button>
+  </div>
+
+  <div class="container" id="quizScreen" style="display:none;">
+    <h3 id="questionText"></h3>
+    <div id="options"></div>
+  </div>
+
+  <div class="container" id="resultScreen" style="display:none;">
+    <h2>Hasil Kuis 🎉</h2>
+    <p id="resultText"></p>
+    <button onclick="location.reload()">Main Lagi</button>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        question: "1. Apa ibu kota Indonesia?",
+        options: ["Bandung", "Jakarta", "Surabaya", "Medan"],
+        answer: "Jakarta"
+      },
+      {
+        question: "2. Siapa proklamator Indonesia?",
+        options: ["Soekarno dan Hatta", "Soekarno dan Sudirman", "Hatta dan Kartini", "Sudirman dan Diponegoro"],
+        answer: "Soekarno dan Hatta"
+      },
+      {
+        question: "3. Planet terbesar di tata surya adalah?",
+        options: ["Bumi", "Mars", "Jupiter", "Saturnus"],
+        answer: "Jupiter"
+      },
+      {
+        question: "4. Hasil dari 5 + 7 adalah?",
+        options: ["10", "11", "12", "13"],
+        answer: "12"
+      },
+      {
+        question: "5. Warna bendera Indonesia terdiri dari?",
+        options: ["Merah Putih", "Putih Biru", "Merah Kuning", "Hijau Kuning"],
+        answer: "Merah Putih"
+      }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+    let player = "";
+
+    function startQuiz() {
+      const nameInput = document.getElementById("playerName").value.trim();
+      if (nameInput === "") {
+        alert("Masukkan nama dulu ya!");
+        return;
+      }
+      player = nameInput;
+      document.getElementById("startScreen").style.display = "none";
+      document.getElementById("quizScreen").style.display = "block";
+      showQuestion();
+    }
+
+    function showQuestion() {
+      const q = questions[currentQuestion];
+      document.getElementById("questionText").textContent = q.question;
+
+      const optionsDiv = document.getElementById("options");
+      optionsDiv.innerHTML = "";
+      q.options.forEach(option => {
+        const btn = document.createElement("div");
+        btn.textContent = option;
+        btn.classList.add("option");
+        btn.onclick = () => checkAnswer(option);
+        optionsDiv.appendChild(btn);
+      });
+    }
+
+    function checkAnswer(selected) {
+      if (selected === questions[currentQuestion].answer) {
+        score++;
+        alert("Benar 🎉");
+      } else {
+        alert("Salah 😅");
+      }
+
+      currentQuestion++;
+      if (currentQuestion < questions.length) {
+        showQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      document.getElementById("quizScreen").style.display = "none";
+      document.getElementById("resultScreen").style.display = "block";
+      document.getElementById("resultText").textContent =
+        `${player}, skor kamu adalah ${score} dari ${questions.length}.`;
+    }
+  </script>
+</body>
+</html>
